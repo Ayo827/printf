@@ -18,12 +18,14 @@ int i;
 int len;
 int nprinted;
 int found;
+va_list ap;
+int str[40];
+int temp; 
 if (format == NULL)
 return 0;
-va_list ap;
 va_start(ap, format);
 num = 0;
-*token = NULL;
+*token = "";
 i = 0;
 len = strlen(format);
 nprinted = 0;
@@ -32,7 +34,7 @@ while ( i < len )
 {
 num = 0;
 found = 0;
-token = NULL;
+token = "";
 if ((format[i] == '%') && ((i + 1) < len))
 {
 switch (format[i+1])
@@ -40,10 +42,8 @@ switch (format[i+1])
 case 'd':
 {
 found = 1;
-int str[40];
 int j = 0;
 num = va_arg(ap, int);
-int temp; 
 temp = num;
 if (num < 0)
 num = -num;
@@ -69,7 +69,7 @@ case 's':
 {
 found = 1;
 token = va_arg(ap, char *);
-if ( token != NULL )
+if ( token != "" )
 {
 int j;
 int tokenLength;
