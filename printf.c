@@ -17,9 +17,9 @@ char *s;
 int length;
 va_list ap;
 va_start(ap, format);
-for(character = format; *character != 0; character++)
+for(character = format; *character != '\0'; character++)
 {
-while(*character != %)
+while(*character != '%')
 {
 putchar(*character);
 character++;
@@ -27,21 +27,20 @@ character++;
 character++;
 switch(*character)
 {
-case c : i = va_arg(ap,int);
+case 'c' : i = va_arg(ap,int);
 putchar(i);
-length = strlen(i);
-return (length);
+return (i);
 break;
-case s: s = va_arg(ap,char *);
+case 's': s = va_arg(ap,char *);
 puts(s);
 length = strlen(s);
 return length;
 break;
-case d: i = va_arg(ap,int);
+case 'd': i = va_arg(ap,int);
 if (i<0)
 {
 i = -i;
-putchar(-);
+putchar('-');
 puts(convert(i,10));
 return convert(i,10);
 }
@@ -61,7 +60,7 @@ static char Representation[]= "0123456789ABCDEF";
 static char buffer[50];
 char *ptr;
 ptr = &buffer[49];
-*ptr = 0;
+*ptr = '\0';
 do
 {
 *--ptr = Representation[num%base];
