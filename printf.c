@@ -9,7 +9,7 @@
 * Description: This function is to perform functions of printf
 * Return: integer
 **/
-int _printf(const char* format,...)
+int _printf(char* format,...)
 {
 char *character;
 int i;
@@ -42,17 +42,18 @@ if (i<0)
 i = -i;
 putchar('-');
 puts(convert(i,10));
-return convert(i,10);
+return atoi(convert(i,10));
 }
 else
 {
 puts(convert(i,10));
-return  puts(convert(i,10));
+return  atoi(puts(convert(i,10)));
 }
 break;
 }
 }
 va_end(ap);
+return 0;
 }
 char *convert(unsigned int num, int base)
 {
