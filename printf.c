@@ -36,6 +36,12 @@ puts(s);
 length = strlen(s);
 return length;
 break;
+case 'x': i = va_arg(arg,unsigned int);
+puts(convert(i,16));
+break;
+case 'o': i = va_arg(arg,unsigned int); //Fetch Octal representation
+puts(convert(i,8));
+break;
 case 'd': i = va_arg(ap,int);
 if (i<0)
 {
