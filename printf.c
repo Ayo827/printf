@@ -3,74 +3,88 @@
 #include <limits.h>
 #include <string.h>
 #include "main.h"
+#include <stdlib.h>
 /**
 * _printf - check code
 * @format: This is character to be printed to stdout
 * Description: This function is to perform functions of printf
 * Return: integer
 **/
-int _printf(char* format,...)
+int _printf(const char *format, ...)
 {
-char *character;
-int i;
-char *s;
-int length;
-va_list ap;
-va_start(ap, format);
-for(character = format; *character != '\0'; character++)
-{
-while(*character != '%')
-{
-putchar(*character);
-character++;
-}
-character++;
-switch(*character)
-{
-case 'c' : i = va_arg(ap,int);
-putchar(i);
-return (i);
-break;
-case 's': s = va_arg(ap,char *);
-puts(s);
-length = strlen(s);
-return length;
-break;
-case 'x': i = va_arg(ap,unsigned int);
-puts(convert(i,16));
-break;
-case 'o': i = va_arg(ap,unsigned int);
-puts(convert(i,8));
-break;
-case 'd': i = va_arg(ap,int);
-if (i<0)
-{
-i = -i;
-putchar('-');
-puts(convert(i,10));
-}
-else
-{
-puts(convert(i,10));
-}
-break;
-}
-}
-va_end(ap);
+if (format == NULL)
 return 0;
-}
-char *convert(unsigned int num, int base)
+va_list valist;
+va_start(valist, format);
+int num = 0;
+char *token = NULL;
+int i = 0;
+int len = strlen(format);
+int nprinted = 0;
+int found = 0;
+while ( i < len )
 {
-static char Representation[]= "0123456789ABCDEF";
-static char buffer[50];
-char *ptr;
-ptr = &buffer[49];
-*ptr = '\0';
-do
+num = 0;
+found = 0;
+token = NULL;
+if ((format[i] == '%') && ((i + 1) < len))
 {
-*--ptr = Representation[num%base];
-num /= base;
+switch (format[i+1])
+{
+case 'd':
+{
+found = 1;
+int str[40];
+int j = 0;
+num = va_arg(valist, int);
+int temp = num;
+if (num < 0)
+num = -num;
+while (num != 0)
+{
+str[j++] = (num % 10);
+num /= 10;
 }
-while(num != 0);
-return(ptr);
+if (temp < 0)
+str[j++] = '-';
+nprinted += j;
+j--;
+while (j >= 0)
+{
+if (str[j] != '-')
+putchar(str[j--] + '0');
+else
+putchar(str[j--]);
+}
+}
+break;
+case 's':
+{
+found = 1;
+token = va_arg(valist, char *);
+if ( token != NULL )
+{
+int j = 0;
+while (token[j] != NULL)
+{
+nprinted++;
+putchar(token[j]);
+j++;
+}
+}
+}
+break;
+}
+if (found != 0)
+{
+i += 2;
+continue;
+}
+}
+putchar(format[i]);
+nprinted++;
+i++;
+}
+va_end(valist);
+return nprinted;
 }
