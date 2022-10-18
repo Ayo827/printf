@@ -42,12 +42,10 @@ if (i<0)
 i = -i;
 putchar('-');
 puts(convert(i,10));
-return atoi(convert(i,10));
 }
 else
 {
 puts(convert(i,10));
-return  atoi(puts(convert(i,10)));
 }
 break;
 }
