@@ -70,7 +70,7 @@ case 's':
 {
 found = 1;
 token = va_arg(ap, char *);
-if ( token != "" )
+if ( token != NULL )
 {
 int j;
 int tokenLength;
