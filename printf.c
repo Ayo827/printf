@@ -20,12 +20,13 @@ int nprinted;
 int found;
 va_list ap;
 int str[40];
-int temp; 
+int temp;
+int j = 0;
 if (format == NULL)
 return 0;
 va_start(ap, format);
 num = 0;
-*token = "";
+token = "";
 i = 0;
 len = strlen(format);
 nprinted = 0;
@@ -42,7 +43,7 @@ switch (format[i+1])
 case 'd':
 {
 found = 1;
-int j = 0;
+j = 0;
 num = va_arg(ap, int);
 temp = num;
 if (num < 0)
