@@ -12,16 +12,22 @@
 **/
 int _printf(const char *format, ...)
 {
+int num;
+char *token;
+int i;
+int len;
+int nprinted;
+int found;
 if (format == NULL)
 return 0;
-va_list valist;
-va_start(valist, format);
-int num = 0;
-char *token = NULL;
-int i = 0;
-int len = strlen(format);
-int nprinted = 0;
-int found = 0;
+va_list ap;
+va_start(ap, format);
+num = 0;
+*token = NULL;
+i = 0;
+len = strlen(format);
+nprinted = 0;
+found = 0;
 while ( i < len )
 {
 num = 0;
@@ -36,8 +42,9 @@ case 'd':
 found = 1;
 int str[40];
 int j = 0;
-num = va_arg(valist, int);
-int temp = num;
+num = va_arg(ap, int);
+int temp; 
+temp = num;
 if (num < 0)
 num = -num;
 while (num != 0)
@@ -61,11 +68,14 @@ break;
 case 's':
 {
 found = 1;
-token = va_arg(valist, char *);
+token = va_arg(ap, char *);
 if ( token != NULL )
 {
-int j = 0;
-while (token[j] != NULL)
+int j;
+int tokenLength;
+tokenLength = strlen(token);
+j = 0;
+while (j < tokenLength)
 {
 nprinted++;
 putchar(token[j]);
@@ -85,6 +95,6 @@ putchar(format[i]);
 nprinted++;
 i++;
 }
-va_end(valist);
+va_end(ap);
 return nprinted;
 }
