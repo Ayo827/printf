@@ -8,6 +8,7 @@
 * @format: This is character to be printed to stdout
 * Description: This function is to perform functions of printf
 * Return: integer
+**/
 int _printf(const char* format,...)
 {
 char *character;
