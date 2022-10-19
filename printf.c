@@ -1,101 +1,66 @@
-#include<stdio.h>
-#include<stdarg.h>
-#include <limits.h>
-#include <string.h>
 #include "main.h"
-#include <stdlib.h>
+
+void print_buffer(char buffer[], int *buff_ind);
+
 /**
-* _printf - check code
-* @format: This is character to be printed to stdout
-* Description: This function is to perform functions of printf
-* Return: integer
-**/
+ * _printf - Printf function
+ * @format: format.
+ * Return: Printed chars.
+ */
 int _printf(const char *format, ...)
 {
-int num;
-char *token;
-int i;
-int len;
-int nprinted;
-int found;
-va_list ap;
-int str[40];
-int temp;
-int j = 0;
-if (format == NULL)
-return 0;
-va_start(ap, format);
-num = 0;
-token = "";
-i = 0;
-len = strlen(format);
-nprinted = 0;
-found = 0;
-while ( i < len )
-{
-num = 0;
-found = 0;
-token = "";
-if ((format[i] == '%') && ((i + 1) < len))
-{
-switch (format[i+1])
-{
-case 'd':
-{
-found = 1;
-j = 0;
-num = va_arg(ap, int);
-temp = num;
-if (num < 0)
-num = -num;
-while (num != 0)
-{
-str[j++] = (num % 10);
-num /= 10;
+	int i, printed = 0, printed_chars = 0;
+	int flags, width, precision, size, buff_ind = 0;
+	va_list list;
+	char buffer[BUFF_SIZE];
+
+	if (format == NULL)
+		return (-1);
+
+	va_start(list, format);
+
+	for (i = 0; format && format[i] != '\0'; i++)
+	{
+		if (format[i] != '%')
+		{
+			buffer[buff_ind++] = format[i];
+			if (buff_ind == BUFF_SIZE)
+				print_buffer(buffer, &buff_ind);
+			/* write(1, &format[i], 1);*/
+			printed_chars++;
+		}
+		else
+		{
+			print_buffer(buffer, &buff_ind);
+			flags = get_flags(format, &i);
+			width = get_width(format, &i, list);
+			precision = get_precision(format, &i, list);
+			size = get_size(format, &i);
+			++i;
+			printed = handle_print(format, &i, list, buffer,
+				flags, width, precision, size);
+			if (printed == -1)
+				return (-1);
+			printed_chars += printed;
+		}
+	}
+
+	print_buffer(buffer, &buff_ind);
+
+	va_end(list);
+
+	return (printed_chars);
 }
-if (temp < 0)
-str[j++] = '-';
-nprinted += j;
-j--;
-while (j >= 0)
+
+/**
+ * print_buffer - Prints the contents of the buffer if it exist
+ * @buffer: Array of chars
+ * @buff_ind: Index at which to add next char, represents the length.
+ */
+void print_buffer(char buffer[], int *buff_ind)
 {
-if (str[j] != '-')
-putchar(str[j--] + '0');
-else
-putchar(str[j--]);
-}
-}
-break;
-case 's':
-{
-found = 1;
-token = va_arg(ap, char *);
-if ( token != NULL )
-{
-int j;
-int tokenLength;
-tokenLength = strlen(token);
-j = 0;
-while (j < tokenLength)
-{
-nprinted++;
-putchar(token[j]);
-j++;
-}
-}
-}
-break;
-}
-if (found != 0)
-{
-i += 2;
-continue;
-}
-}
-putchar(format[i]);
-nprinted++;
-i++;
-}
-va_end(ap);
-return nprinted;
+	if (*buff_ind > 0)
+		write(1, &buffer[0], *buff_ind);
+
+	*buff_ind = 0;
 }
